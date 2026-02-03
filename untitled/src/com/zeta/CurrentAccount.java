@@ -6,7 +6,12 @@ public class CurrentAccount extends Account{
     }
 
     @Override
-    float deposit(float amount) {
+    public float deposit(float amount) {
+        return 0;
+    }
+
+    @Override
+    public float withdraw(float amount) {
         return 0;
     }
 }
