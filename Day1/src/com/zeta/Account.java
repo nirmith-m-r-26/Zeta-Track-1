@@ -6,9 +6,9 @@ public abstract class Account {
     private final int number;// immutable property
     Address address; //Has-A
 
-    public abstract float deposit (float amount);
+    public abstract float deposit (float amount, Account acc);
 
-    public abstract float withdraw (float amount);
+    public abstract float withdraw (float amount, Account acc);
 
     public int getNumber() {
         return number;
