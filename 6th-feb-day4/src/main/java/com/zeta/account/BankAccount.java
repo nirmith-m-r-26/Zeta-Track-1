@@ -1,7 +1,17 @@
-package com.zeta.thread;
+package com.zeta.account;
 
 public class BankAccount {
     private int balance;
+    private LoanAccount loanAccount;
+
+
+    public LoanAccount getLoanAccount() {
+        return loanAccount;
+    }
+
+    public void setLoanAccount(LoanAccount loanAccount) {
+        this.loanAccount = loanAccount;
+    }
 
     public BankAccount(int balance) {
         this.balance = balance;

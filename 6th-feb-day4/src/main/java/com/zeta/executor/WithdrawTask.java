@@ -1,6 +1,6 @@
 package com.zeta.executor;
 
-import com.zeta.thread.BankAccount;
+import com.zeta.account.BankAccount;
 
 public class WithdrawTask implements Runnable{
     private final BankAccount bankAccount;
