@@ -39,7 +39,7 @@ class SumTask extends RecursiveTask<Integer> {
 
 public class ForkJoinDemo {
     public static void main(String[] args) {
-        ArrayList<Account> accounts = new ArrayList<Account>();
+        ArrayList<Account> accounts = new ArrayList<>();
 
         System.out.println("Initial Balance: ");
         for (int i = 0; i < 100; i++) {
