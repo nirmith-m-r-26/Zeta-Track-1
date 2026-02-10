@@ -3,7 +3,7 @@ package com.zeta;
 import java.util.Scanner;
 
 public class Validator {
-    public static int validateAmount(int amount, Scanner scanner) {
+    public static int validateInitialAmount(int amount, Scanner scanner) {
         lambda.Validator validator = (amount1, scanner1)->{
             if (amount1 < 0) {
                 while (true) {

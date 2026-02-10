@@ -15,7 +15,7 @@ public class WithdrawTask implements Runnable{
     @Override
     public void run() {
         String thread = Thread.currentThread().getName();
-        System.out.println(thread+" attempting to winthdraw ₹"+amount);
+        System.out.println(thread+" attempting to withdraw ₹"+amount);
 
         boolean success = bankAccount.withdraw(amount);
         if(success){

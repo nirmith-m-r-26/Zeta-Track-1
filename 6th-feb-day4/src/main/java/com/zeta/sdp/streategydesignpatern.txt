@@ -1,0 +1,21 @@
+Strategy Design Pattern consist of 3 main components:
+
+1. Strategy (interface)
+2. Concrete implementation
+3. Context (where we use the implemented methods)
+
+in our example of BMS, the 3 Components are
+
+i. Strategy
+1. interface for BankingTask which defines abstract methods like Deposit, Withdraw, LoanIssue
+2. This interface acts as the strategy which defines the behavior
+
+ii. Concrete Implementation
+1. Implement the BankingTask strategy
+2. It also provides concrete implementation for methods like Deposit, Withdraw, LoanIssue
+3. Each implementation represents different strategy
+
+iii. Context
+1. Create the BankAccount, LoanAccount class
+2. These classes use the BankingTask interface's implementation
+3. Then they use these methods and for business purposes

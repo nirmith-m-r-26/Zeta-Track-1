@@ -22,13 +22,13 @@ public class BankingApp {
         System.out.println("Enter initial bank balance");
         int initialBalance = scanner.nextInt();
 
-        initialBalance = Validator.validateAmount(initialBalance, scanner);
+        initialBalance = Validator.validateInitialAmount(initialBalance, scanner);
 
         BankAccount bankAccount = new BankAccount(initialBalance);
 
         ExecutorService executor = Executors.newFixedThreadPool(3);
 
-        Menu menu = ()->{
+        Menu menu = () -> {
             System.out.println("\n===== MULTITHREADED BANKING SYSTEM (ExecutorService ====");
             System.out.println("1. Check Balance");
             System.out.println("2. Deposit Money");
@@ -40,25 +40,25 @@ public class BankingApp {
             System.out.print("Enter your choice: ");
         };
 
-        Case case1 = ()->{
+        Case case1 = () -> {
             System.out.println("Current Balance: ₹" + bankAccount.getBalance());
         };
 
-        Case case2 = ()->{
+        Case case2 = () -> {
             System.out.print(s);
             int dep = scanner.nextInt();
-            dep = Validator.validateAmount(dep, scanner);
+            dep = Validator.validateInitialAmount(dep, scanner);
             executor.execute(new DepositTask(bankAccount, dep));
         };
 
-        Case case3 = ()->{
+        Case case3 = () -> {
             System.out.print("Enter amount to withdraw: ₹");
             int w = scanner.nextInt();
-            w = Validator.validateAmount(w, scanner);
+            w = Validator.validateInitialAmount(w, scanner);
             executor.execute(new WithdrawTask(bankAccount, w));
         };
 
-        Case case4 = ()->{
+        Case case4 = () -> {
             System.out.println("Simulating two parallel withdrawals of ₹" + (bankAccount.getBalance() / 2));
 
             Future<?> future = executor.submit(new WithdrawTask(bankAccount, bankAccount.getBalance() / 2));
@@ -71,13 +71,13 @@ public class BankingApp {
             executor.shutdown();
         };
 
-        Case case5 = ()->{
+        Case case5 = () -> {
             System.out.println("Issue loan: ");
             System.out.println("Enter loanAmount, tenure");
             executor.execute(new LoanIssueTask(bankAccount, scanner.nextInt(), 10, scanner.nextFloat()));
         };
 
-        Case case6 = ()->{
+        Case case6 = () -> {
             try {
                 System.out.println(bankAccount.getLoanAccount().getLoanAmount());
             } catch (Exception e) {
@@ -85,17 +85,17 @@ public class BankingApp {
             }
         };
 
-        Case case7 = ()->{
+        Case case7 = () -> {
             System.out.println("Shutting down banking system...");
             scanner.close();
             System.exit(0);
         };
 
-        Case casedef = ()->{
+        Case casedef = () -> {
             System.out.println("Invalid choice! Try again.");
         };
 
-        while (true) {
+        while (true) { // strategy design pattern
             menu.print();
 
             try {

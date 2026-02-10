@@ -1,5 +1,6 @@
 package com.zeta.executor;
 
+import com.zeta.Validator;
 import com.zeta.account.BankAccount;
 
 public class DepositTask implements Runnable{
