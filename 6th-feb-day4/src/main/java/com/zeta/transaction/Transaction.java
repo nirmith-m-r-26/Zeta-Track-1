@@ -10,12 +10,14 @@ public class Transaction {
     final double amount;
     final BankAccount otherAccount;
 
-    public Transaction(STATUS status, LocalDateTime dateTime, double amount, BankAccount otherAccount) {
+    public Transaction(STATUS status, LocalDateTime dateTime, double amount, BankAccount otherAccount ) {
         this.status = status;
         this.dateTime = dateTime;
         this.amount = amount;
         this.otherAccount = otherAccount;
     }
+
+
 
     public STATUS getStatus() {
         return status;

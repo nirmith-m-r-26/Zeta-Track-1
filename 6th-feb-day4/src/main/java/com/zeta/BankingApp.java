@@ -7,6 +7,7 @@ import com.zeta.account.BankAccount;
 import lambda.Case;
 import lambda.Menu;
 
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -14,78 +15,146 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class BankingApp {
-    private static String s;
+    static int baseAccountNumber = 1001;
 
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter initial bank balance");
-        int initialBalance = scanner.nextInt();
-
-        initialBalance = Validator.validateInitialAmount(initialBalance, scanner);
-
-        BankAccount bankAccount = new BankAccount(initialBalance);
+        HashMap<Integer, BankAccount> allAccounts = new HashMap<>();
 
         ExecutorService executor = Executors.newFixedThreadPool(3);
 
         Menu menu = () -> {
-            System.out.println("\n===== MULTITHREADED BANKING SYSTEM (ExecutorService ====");
+            System.out.println("\n===== MULTITHREADED BANKING SYSTEM (ExecutorService + Lambda + Collections) ====");
             System.out.println("1. Check Balance");
             System.out.println("2. Deposit Money");
             System.out.println("3. Withdraw Money");
             System.out.println("4. Simulate Parallel Withdrawals");
             System.out.println("5. Loan Issue");
             System.out.println("6. Show Loan amount");
-            System.out.println("7. Exit");
+            System.out.println("7. Create account"); //TODO: do case 8,9
+            System.out.println("8. View Transactions");
+            System.out.println("9. Show all accounts");
+            System.out.println("10. Exit");
             System.out.print("Enter your choice: ");
         };
 
         Case case1 = () -> {
-            System.out.println("Current Balance: ₹" + bankAccount.getBalance());
+            try {
+                System.out.println("Enter account number: ");
+                int accountNumber = scanner.nextInt();
+                Validator.validateAccountNumber(accountNumber);
+                System.out.println("Your Account Balance: ₹" + allAccounts.get(accountNumber).getBalance());
+            } catch (Exception e) {
+                System.out.println("Invalid Account number entered...☹️ OR No account Found 👎");
+            }
         };
 
         Case case2 = () -> {
-            System.out.print(s);
-            int dep = scanner.nextInt();
-            dep = Validator.validateInitialAmount(dep, scanner);
-            executor.execute(new DepositTask(bankAccount, dep));
+            try {
+                System.out.println("Enter amount to deposit: ");
+                int deposit = scanner.nextInt();
+                Validator.validateAmount(deposit);
+                System.out.println("Enter account number: ");
+                int accountNumber = scanner.nextInt();
+                Validator.validateAccountNumber(accountNumber);
+                BankAccount bankAccount = allAccounts.get(accountNumber);
+                bankAccount.deposit(deposit);
+            } catch (Exception e) {
+                System.out.println("ç");
+            }
         };
 
         Case case3 = () -> {
-            System.out.print("Enter amount to withdraw: ₹");
-            int w = scanner.nextInt();
-            w = Validator.validateInitialAmount(w, scanner);
-            executor.execute(new WithdrawTask(bankAccount, w));
+            try {
+                System.out.print("Enter amount to withdraw: ₹");
+                int withdraw = scanner.nextInt();
+                Validator.validateAmount(withdraw);
+                System.out.println("Enter account number: ");
+                int accountNumber = scanner.nextInt();
+                Validator.validateAccountNumber(accountNumber);
+                BankAccount bankAccount = allAccounts.get(accountNumber);
+//                executor.execute(new WithdrawTask(bankAccount, withdraw));
+                bankAccount.withdraw(withdraw);
+            } catch (Exception e) {
+                System.out.println("Invalid Account number entered...☹️");
+            }
         };
 
         Case case4 = () -> {
-            System.out.println("Simulating two parallel withdrawals of ₹" + (bankAccount.getBalance() / 2));
-
-            Future<?> future = executor.submit(new WithdrawTask(bankAccount, bankAccount.getBalance() / 2));
             try {
-                future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
+                System.out.println("Enter account number: ");
+                int accountNumber = scanner.nextInt();
+                Validator.validateAccountNumber(accountNumber);
+                BankAccount bankAccount = allAccounts.get(accountNumber);
+                System.out.println("Simulating two parallel withdrawals of ₹" + (bankAccount.getBalance() / 2));
+
+                Future<?> future = executor.submit(new WithdrawTask(bankAccount, bankAccount.getBalance() / 2));
+                try {
+                    future.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+                executor.submit(new WithdrawTask(bankAccount, bankAccount.getBalance() / 2));
+                executor.shutdown();
+            } catch (Exception e) {
+                System.out.println("Invalid Account number entered...☹️");
             }
-            executor.submit(new WithdrawTask(bankAccount, bankAccount.getBalance() / 2));
-            executor.shutdown();
         };
 
         Case case5 = () -> {
-            System.out.println("Issue loan: ");
-            System.out.println("Enter loanAmount, tenure");
-            executor.execute(new LoanIssueTask(bankAccount, scanner.nextInt(), 10, scanner.nextFloat()));
+            try {
+                System.out.println("Issue loan: ");
+                System.out.println("Enter account number: ");
+                int accountNumber = scanner.nextInt();
+                Validator.validateAccountNumber(accountNumber);
+                System.out.println("Enter loanAmount, tenure");
+                BankAccount bankAccount = allAccounts.get(accountNumber);
+                executor.execute(new LoanIssueTask(bankAccount, scanner.nextInt(), 10, scanner.nextFloat()));
+            } catch (NullPointerException nullPointerException) {
+                System.out.println("Account does not exist... ");
+            } catch (Exception e) {
+                System.out.println("Invalid Account number entered...☹️");
+            }
         };
 
         Case case6 = () -> {
             try {
+                System.out.println("Enter account number: ");
+                int accountNumber = scanner.nextInt();
+                Validator.validateAccountNumber(accountNumber);
+                BankAccount bankAccount = allAccounts.get(accountNumber);
                 System.out.println(bankAccount.getLoanAccount().getLoanAmount());
             } catch (Exception e) {
-                System.out.println("No loans available");
+                System.out.println("No loans available 🥳");
             }
         };
 
         Case case7 = () -> {
+            System.out.println("Welcome to Namma Bank 🏦\nYou are about to open a new account in your Namma Bank.\nPlease click Enter to open account");
+            scanner.nextLine();
+            scanner.nextLine();
+            allAccounts.put(baseAccountNumber, new BankAccount(0, baseAccountNumber));
+            System.out.println("Your account number is: " + baseAccountNumber);
+        };
+
+        Case case8 = () -> {
+            try {
+                System.out.println("Enter account number: ");
+                int accountNumber = scanner.nextInt();
+                Validator.validateAccountNumber(accountNumber);
+                BankAccount bankAccount = allAccounts.get(accountNumber);
+                System.out.println("All Transactions:\n"+bankAccount.getTransactionHistory());
+            } catch (Exception e) {
+                System.out.println("Invalid Account number entered...☹️");
+            }
+        };
+
+        Case case9 = ()->{
+            System.out.println("All accounts :\n"+allAccounts.keySet());
+        };
+
+        Case case10 = () -> {
             System.out.println("Shutting down banking system...");
             scanner.close();
             System.exit(0);
@@ -95,7 +164,13 @@ public class BankingApp {
             System.out.println("Invalid choice! Try again.");
         };
 
-        while (true) { // strategy design pattern
+        while (true) {
+            System.out.println("Click Enter for menu: ");
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.isEmpty()) break;
+            }
+            scanner.nextLine();
             menu.print();
 
             try {
@@ -128,18 +203,24 @@ public class BankingApp {
                         break;
                     case 7:
                         case7.execute();
+                        baseAccountNumber++;
                         break;
-
-
+                    case 8:
+                        case8.execute();
+                        break;
+                    case 9:
+                        case9.execute();
+                        break;
+                    case 10:
+                        case10.execute();
+                        break;
                     default:
                         casedef.execute();
                 }
             } catch (Exception e) {
                 scanner.next();
-                e.printStackTrace();
+                System.out.println("Invalid Character Entered.... Please enter number 1️⃣-🔟");
             }
-
         }
     }
-
 }

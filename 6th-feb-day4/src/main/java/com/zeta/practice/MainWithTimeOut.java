@@ -10,7 +10,7 @@ public class MainWithTimeOut {
 
     private static void depositMoney() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
-        BankAccount account = new BankAccount(1000);
+        BankAccount account = new BankAccount(1, 1000);
         Future future = executorService.submit(new Deposit(account , 1000));
 //		Future future1 = executorService.submit(new DepositTask(account , 1000));
         try {
