@@ -4,8 +4,6 @@ package collections.map;
 import java.util.HashMap;
 import java.util.Map;
 
-class MyKey{}
-
 public class MapDemo {
     public static void main(String[] args) {
 //        customKey();
@@ -24,8 +22,8 @@ public class MapDemo {
 
     private static void customKey() {
         Map<MyKey, String> map = new HashMap<>();
-        MyKey key = new MyKey();
-        MyKey key1 = new MyKey();
+        MyKey key = new MyKey(1);
+        MyKey key1 = new MyKey(1);
         map.put(key, "value1");
         map.put(key1, "value2");
         System.out.println(map.get(key));
