@@ -16,5 +16,6 @@ public class SetDemo {
         set.forEach(student -> System.out.println(student));
 
         set.stream().sorted(new NameComparator()).forEach(student -> System.out.println(student));
+
     }
 }

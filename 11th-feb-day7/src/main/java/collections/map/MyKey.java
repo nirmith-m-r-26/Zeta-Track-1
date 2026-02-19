@@ -24,5 +24,4 @@ public class MyKey implements Comparable<MyKey>{
     public int compareTo(MyKey otherKey) {
         return this.id - otherKey.id;
     }
-
 }

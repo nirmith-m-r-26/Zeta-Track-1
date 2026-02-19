@@ -20,6 +20,7 @@ public class BankingApp {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
+        System.out.println("🏦 Namma Bank – Secure. Simple. Smart.");
         HashMap<Integer, BankAccount> allAccounts = new HashMap<>();
 
         ExecutorService executor = Executors.newFixedThreadPool(3);
